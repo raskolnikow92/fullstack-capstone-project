@@ -49,5 +49,44 @@ const JWT_SECRET = process.env.JWT_SECRET;
              return res.status(500).send('Internal server error');
         }
     });
+    
+    router.post('/login', async (req, res) => {
+        try {
+            // Task 1: Connect to `giftsdb` in MongoDB through `connectToDatabase` in `db.js`.
+            const db = await connectToDatabase();
+            // Task 2: Access MongoDB `users` collection
+            const collection = db.collection('users')
+            // Task 3: Check for user credentials in database
+            const userCredentials = await collection.findOne({email: req.body.email});
+            // Task 4: Task 4: Check if the password matches the encrypyted password and send appropriate message on mismatch
+            if(userCredentials){
+                let result = await bcryptjs.compare(req.body.password, userCredentials.password);
+                if(!result){
+                    logger.error('Passwords do not match');
+                    return res.status(404).json({ error: 'Wrong pasword' })                  
+                }
+                const userName = userCredentials.firstName;
+                const userEmail = userCredentials.email;
+                let payload = {
+                    user: {
+                        id: userCredentials._id.toString(),
+                    }
+                };
+                const authtoken = jwt.sign(payload, JWT_SECRET);
+                res.status(200).json({authtoken, userName, userEmail });
+            }else{
+                logger.info('User not found');
+                return res.status(404).json({error: 'User not found'});
+            }
+            
+            
+            // Task 5: Fetch user details from database
+            // Task 6: Create JWT authentication if passwords match with user._id as payload
+            
+            // Task 7: Send appropriate message if user not found
+        } catch (e) {
+             return res.status(500).send('Internal server error');
+        }
+    });
 
 module.exports = router;
