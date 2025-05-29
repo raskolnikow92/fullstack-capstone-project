@@ -10,7 +10,7 @@ function SearchPage() {
     const conditions = ['New', 'Like New', 'Older'];
     const [ searchQuery, setSearchQuery ] = useState();
     const [ ageRange, setAgeRange ] = useState()
-    const [ searchResults, setSearchResults ] = useState();
+    const [ searchResults, setSearchResults ] = useState(null);
     useEffect(() => {
         // fetch all products
         const fetchProducts = async () => {
@@ -98,7 +98,7 @@ function SearchPage() {
                     <button className='btn btn-primary' onClick={handleSearch}>Search</button>
                     {/*Task 5: Display search results and handle empty results with a message. */}
                     <div className="search-results mt-4">
-                        {searchResults.length > 0 ? (
+                        {searchResults && searchResults.length > 0 ? (
                         searchResults.map(product => (
                             <div key={product.id} className="card mb-3">
             {/* Check if product has an image and display it */}
