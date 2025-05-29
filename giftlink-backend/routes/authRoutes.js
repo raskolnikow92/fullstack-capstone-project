@@ -22,7 +22,7 @@ const JWT_SECRET = process.env.JWT_SECRET;
             // Task 2: Access MongoDB collection
             const collection = db.collection('users')
             //Task 3: Check for existing email
-            const existingEmail = collection.findOne({email:req.body.email});
+            const existingEmail = await collection.findOne({email:req.body.email});
             if(existingEmail){
                 res.status(409).send('Email already exists')
             }
