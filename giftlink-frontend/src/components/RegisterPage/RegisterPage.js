@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
-
+import {urlConfig} from '../../config';
+import { useAppContext } from '../../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 import './RegisterPage.css';
 
 function RegisterPage() {
@@ -9,9 +11,39 @@ function RegisterPage() {
     const [ lastName, setLastName ] = useState('');
     const [ email, setEmail ] = useState('');
     const [ password, setPassword ] = useState('');
+
+    const [errorMessage, setErrorMessage ] = useState();
+    const navigate = useNavigate();
+    const { setIsLoggedIn } = useAppContext();
     // insert code here to create handleRegister function and include console.log
     const handleRegister = async()=>{
-        console.log('Register text');
+        try{
+            const response = await fetch(`${urlConfig.backendUrl}/api/auth/register`,{
+                method: 'POST',
+                headers: {
+                    'content-type': 'application/json',
+                },
+                body: JSON.stringify({
+                    firstName: firstName,
+                    lastName: lastName,
+                    email: email,
+                    password: password
+                })
+            });
+            const data = await response.json();
+            if(data.authToken){
+                sessionStorage.setItem('auth-token', json.authtoken);
+                sessionStorage.setItem('name', firstName);
+                sessionStorage.setItem('email', json.email);
+                setIsLoggedIn(true);
+                navigate('/app')
+            }
+            if(data.error){
+                setErrorMessage(json.error);
+            }
+        }catch(err){
+            console.log("Error fetching details: " + err.message);
+        }
     }
          return (
             <div className="container mt-5">
@@ -43,12 +75,12 @@ function RegisterPage() {
                         <label htmlFor="email" className="form label"> Email</label><br/>
                         <input
                             id="email"
-                            type="email"
                             className="form-control"
                             placeholder="Enter your email"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                         />
+                        <div className="text-danger">{errorMessage}</div>
                         <label htmlFor="password" className="form label"> Password</label><br/>
                         <input
                             id="password"
