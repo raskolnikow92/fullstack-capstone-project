@@ -32,14 +32,14 @@ function RegisterPage() {
             });
             const data = await response.json();
             if(data.authToken){
-                sessionStorage.setItem('auth-token', json.authtoken);
+                sessionStorage.setItem('auth-token', data.authtoken);
                 sessionStorage.setItem('name', firstName);
-                sessionStorage.setItem('email', json.email);
+                sessionStorage.setItem('email', data.email);
                 setIsLoggedIn(true);
                 navigate('/app')
             }
             if(data.error){
-                setErrorMessage(json.error);
+                setErrorMessage(data.error);
             }
         }catch(err){
             console.log("Error fetching details: " + err.message);
