@@ -8,8 +8,8 @@ function SearchPage() {
     //Task 1: Define state variables for the search query, age range, and search results.
     const categories = ['Living', 'Bedroom', 'Bathroom', 'Kitchen', 'Office'];
     const conditions = ['New', 'Like New', 'Older'];
-    const [ searchQuery, setSearchQuery ] = useState();
-    const [ ageRange, setAgeRange ] = useState()
+    const [ searchQuery, setSearchQuery ] = useState('');
+    const [ ageRange, setAgeRange ] = useState('')
     const [ searchResults, setSearchResults ] = useState(null);
     useEffect(() => {
         // fetch all products
